@@ -11,11 +11,8 @@
 
 
 
-
 static const int Window_Width = 400;
 static const int Window_Height = 400;
-
-
 
 
 //********************************************************************************
