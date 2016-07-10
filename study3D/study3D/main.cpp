@@ -12,12 +12,26 @@
 
 int rotAngle = 0;
 
-int msecs = 30;
+int msecs = 17;
 
 
-int cameraPosX = 3;
-int cameraPosY = 2;
-int cameraPosZ = 5;
+//  カメラ位置
+GLfloat cameraPosX = 3 * 1.5f;
+GLfloat cameraPosY = 2 * 1.5f;
+GLfloat cameraPosZ = 5 * 1.5f;
+
+
+//  光源情報
+GLfloat lightAmb[] = { 0, 0, 0, 1 };
+GLfloat lightDiff[] = { 1, 1, 1, 1 };
+GLfloat lightSpec[] = { 1, 1, 1, 0 };
+
+
+//  金色の材質
+GLfloat goldAmb[] = { 0.24725f, 0.1995f, 0.0745f, 1 };
+GLfloat goldDiff[] = { 0.75164f, 0.60648f, 0.22648f, 1 };
+GLfloat goldSpec[] = { 0.628281, 0.555802f, 0.366065f, 1 };
+GLfloat goldShin = 51.2f;
 
 
 
@@ -59,24 +73,60 @@ void display () {
     rotAngle++;
     
     
-    glColor3f(0, 1, 1);
-    
     glPushMatrix();
     
-    glRotatef(rotAngle, 0, 1, 0);
-    glutWireSphere(1, 20, 20);
+    
+    //  ライティングの有効化
+    glEnable(GL_LIGHTING);
+
+//    glRotatef(rotAngle, 0, 1, 0);
+    
+    //  カラーマテリアルの有効化
+//    glEnable(GL_COLOR_MATERIAL);
+
+    
+    //  材質設定
+    glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, goldAmb);
+    glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, goldDiff);
+    glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, goldSpec);
+    glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, goldShin);
+    
+    //  計算モデルをフラット
+    glShadeModel(GL_FLAT);
+    
+//    glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT);
+//    glColor4fv(goldAmb);
+//    glColorMaterial(GL_FRONT_AND_BACK, GL_DIFFUSE);
+//    glColor4fv(goldDiff);
+//    glColorMaterial(GL_FRONT_AND_BACK, GL_SPECULAR);
+//    glColor4fv(goldSpec);
+    
+//    glutSolidCube(1);
+    glutSolidSphere(1, 20, 20);
+//    glutSolidTeapot(1);
+
+    glDisable(GL_LIGHTING);
+    
+//    glColor3f(1, 1, 1);
+//    glutWireSphere(1.05f, 20, 20);
+    glColor3f(1, 1, 1);
+//    glutWireTeapot(1.01);
     
     glPopMatrix();
     
     
     
-    glColor3f(1, 0, 1);
-    
     glPushMatrix();
     
-    glRotatef(rotAngle, 0, 1, 0);
+    glRotatef(rotAngle, 1, 1, 0);
     glTranslatef(2, 0, 0);
-    glutWireSphere(1, 20, 20);
+    glColor3f(1, 0, 0);
+    glutWireSphere(0.2f, 10, 10);
+    
+    //  ライトの位置を設定
+    GLfloat lightPos[] = { 2, 0, 0, 0 };
+    glLightfv(GL_LIGHT0, GL_POSITION, lightPos);
+
     
     glPopMatrix();
     
@@ -129,7 +179,16 @@ int main(int argc, char * argv[]) {
     glutTimerFunc(0, timer, msecs);
     
     
-    glClearColor(0, 0, 0, 1);
+    //  光源設定
+    glLightfv(GL_LIGHT0, GL_AMBIENT, lightAmb);
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, lightDiff);
+    glLightfv(GL_LIGHT0, GL_SPECULAR, lightSpec);
+    
+    //  光源の有効化
+    glEnable(GL_LIGHT0);
+    
+    GLfloat gray = 0.19607843f;
+    glClearColor(gray, gray, gray, 1);
     glClearDepth(1);    //  0-1、1に近いほど遠い
     
     glutMainLoop();
